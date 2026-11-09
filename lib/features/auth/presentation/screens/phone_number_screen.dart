@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/app_context_extension.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../shared/widgets/app_text_form_field.dart';
 import '../../../../shared/widgets/gradient_safe_area.dart';
-import '../../../../shared/widgets/legal_footer.dart';
-import '../../../../shared/widgets/primary_button.dart';
+import '../widgets/auth_continue_footer.dart';
 import '../widgets/onboarding_step_header.dart';
 
 class PhoneNumberScreen extends StatelessWidget {
@@ -41,24 +42,18 @@ class PhoneNumberScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        TextFormField(
-                          initialValue: '09254135592',
+                        AppTextFormField(
                           keyboardType: TextInputType.phone,
-                          style: context.bodyMedium.copyWith(
-                            color: AppTheme.ink,
-                          ),
-                          decoration: const InputDecoration(
-                            prefixText: '+95   ',
-                            prefixStyle: TextStyle(color: Color(0xFF8A96A5)),
-                          ),
+                          prefixText: '+95   ',
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                         ),
                       ],
                     ),
-                    PrimaryButton(
-                      label: 'CONTINUE',
+                    AuthContinueFooter(
                       onPressed: () => context.push(AppRoutes.verifyNumber),
                     ),
-                    const LegalFooter(),
                   ],
                 ),
               ),

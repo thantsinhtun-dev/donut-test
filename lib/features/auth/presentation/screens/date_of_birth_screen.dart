@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../../core/extensions/app_context_extension.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/widgets/gradient_safe_area.dart';
-import '../../../../shared/widgets/primary_button.dart';
-import '../../../../shared/widgets/legal_footer.dart';
 import '../widgets/onboarding_step_header.dart';
+import '../../../../shared/widgets/app_text_form_field.dart';
+import '../widgets/auth_continue_footer.dart';
 
 class DateOfBirthScreen extends StatelessWidget {
   const DateOfBirthScreen({super.key});
@@ -42,15 +42,14 @@ class DateOfBirthScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        const _DateField(value: 'May'),
+                        const AppTextFormField(initialValue: 'May'),
                         const SizedBox(height: 10),
-                        const _DateField(value: '1'),
+                        const AppTextFormField(initialValue: '1'),
                         const SizedBox(height: 10),
-                        const _DateField(value: '1980'),
+                        const AppTextFormField(initialValue: '1980'),
                       ],
                     ),
-                    PrimaryButton(label: 'CONTINUE', onPressed: () {}),
-                    const LegalFooter(),
+                    AuthContinueFooter(onPressed: () {}),
                   ],
                 ),
               ),
@@ -60,17 +59,4 @@ class DateOfBirthScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-class _DateField extends StatelessWidget {
-  const _DateField({required this.value});
-
-  final String value;
-
-  @override
-  Widget build(BuildContext context) => TextFormField(
-    initialValue: value,
-    style: context.bodyMedium.copyWith(color: AppTheme.ink),
-    decoration: const InputDecoration(),
-  );
 }

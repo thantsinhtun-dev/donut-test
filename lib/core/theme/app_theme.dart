@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shared colors and component styles based on the onboarding reference.
 abstract final class AppTheme {
@@ -6,7 +6,7 @@ abstract final class AppTheme {
   static const Color accent = Color(0xFFF04E9A);
   static const Color ink = Color(0xFF292D35);
   static const Color mutedInk = Color(0xFF737985);
-  static const Color blush = Color(0xFFFFF1F5);
+  static const Color blush = Color(0xFFFFE4EC);
   static const Color canvas = Color(0xFFFFFAFB);
 
   static const ColorScheme colorScheme = ColorScheme(

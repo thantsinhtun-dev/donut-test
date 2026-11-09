@@ -24,6 +24,8 @@ dependencies:
   flutter_secure_storage: ^11.2.0
   path_provider: ^2.1.6
   go_router: ^18.1.3
+  pinput: ^7.0.0
+  material_ui: ^1.10.0
 
 
 dev_dependencies:

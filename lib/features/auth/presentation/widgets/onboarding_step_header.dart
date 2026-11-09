@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -31,10 +31,10 @@ class OnboardingStepHeader extends StatelessWidget {
       ),
       isComplete
           ? Container(
-              width: 20,
-              height: 20,
+              width: 30,
+              height: 30,
               decoration: const BoxDecoration(color: AppTheme.accent, shape: BoxShape.circle),
-              child: const Icon(Icons.check, size: 13, color: Colors.white),
+              child: const Icon(Icons.check, size: 18, color: Colors.white),
             )
           : SizedBox(width: 30, height: 30, child: CustomPaint(painter: _ProgressPainter(progress))),
     ],

@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/app_context_extension.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/widgets/gradient_safe_area.dart';
-import '../../../../shared/widgets/primary_button.dart';
-import '../../../../shared/widgets/legal_footer.dart';
+import '../../../../shared/widgets/app_text_form_field.dart';
+import '../widgets/auth_continue_footer.dart';
 import '../widgets/onboarding_step_header.dart';
 
 class NameScreen extends StatelessWidget {
@@ -43,28 +43,22 @@ class NameScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        TextFormField(
+                        AppTextFormField(
                           initialValue: filled ? 'Ye Min' : null,
                           textCapitalization: TextCapitalization.words,
-                          decoration: const InputDecoration(
-                            hintText: 'First Name',
-                          ),
+                          hintText: 'First Name',
                         ),
                         const SizedBox(height: 10),
-                        TextFormField(
+                        AppTextFormField(
                           initialValue: filled ? 'Phyoe Win' : null,
                           textCapitalization: TextCapitalization.words,
-                          decoration: const InputDecoration(
-                            hintText: 'Last Name',
-                          ),
+                          hintText: 'Last Name',
                         ),
                       ],
                     ),
-                    PrimaryButton(
-                      label: 'CONTINUE',
+                    AuthContinueFooter(
                       onPressed: () => context.push(AppRoutes.dateOfBirth),
                     ),
-                    const LegalFooter(),
                   ],
                 ),
               ),

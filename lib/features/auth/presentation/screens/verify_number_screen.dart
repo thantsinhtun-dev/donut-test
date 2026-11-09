@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pinput/pinput.dart';
 
 import '../../../../core/extensions/app_context_extension.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/widgets/gradient_safe_area.dart';
-import '../../../../shared/widgets/primary_button.dart';
-import '../../../../shared/widgets/legal_footer.dart';
+import '../widgets/auth_continue_footer.dart';
 import '../widgets/onboarding_step_header.dart';
 
 class VerifyNumberScreen extends StatelessWidget {
@@ -68,15 +69,8 @@ class VerifyNumberScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        PrimaryButton(
-                          label: 'CONTINUE',
-                          onPressed: () => context.push(AppRoutes.name),
-                        ),
-                        const SizedBox(height: 14),
-                        const LegalFooter(),
-                      ],
+                    AuthContinueFooter(
+                      onPressed: () => context.push(AppRoutes.name),
                     ),
                   ],
                 ),
@@ -93,19 +87,33 @@ class _OtpBoxes extends StatelessWidget {
   const _OtpBoxes();
 
   @override
-  Widget build(BuildContext context) => Row(
-    children: List.generate(
-      6,
-      (index) => Expanded(
-        child: Container(
-          height: 44,
-          margin: EdgeInsets.only(right: index == 5 ? 0 : 6),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(7),
-          ),
-        ),
+  Widget build(BuildContext context) {
+    final pinTheme = PinTheme(
+      width: 42,
+      height: 44,
+      textStyle: context.bodyLarge,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(7),
+        border: Border.all(color: const Color(0xFFEFE3E8)),
       ),
-    ),
-  );
+    );
+    final focusedPinTheme = pinTheme.copyDecorationWith(
+      border: Border.all(color: AppTheme.primary, width: 1.5),
+    );
+
+    return Pinput(
+      length: 6,
+      defaultPinTheme: pinTheme,
+      focusedPinTheme: focusedPinTheme,
+      submittedPinTheme: pinTheme,
+      separatorBuilder: (_) => const SizedBox(width: 6),
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      keyboardType: TextInputType.number,
+      textInputAction: TextInputAction.done,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+      hapticFeedbackType: HapticFeedbackType.lightImpact,
+    );
+  }
 }
