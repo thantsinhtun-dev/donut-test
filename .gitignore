@@ -48,3 +48,7 @@ app.*.map.json
 .widget_preview/
 # Added by code-review-graph
 .code-review-graph/
+
+# Keep the Freezed API result union with its source.
+!lib/core/network/api_result.freezed.dart
+!lib/features/auth/presentation/cubit/auth_state.freezed.dart

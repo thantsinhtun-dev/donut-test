@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/presentation/cubit/auth_state.dart';
 import '../../features/auth/presentation/screens/onboarding_screen.dart';
 import '../../features/auth/presentation/screens/phone_number_screen.dart';
 import '../../features/auth/presentation/screens/verify_number_screen.dart';
@@ -14,7 +15,6 @@ abstract final class AppRoutes {
   static const phoneNumber = '/phone-number';
   static const verifyNumber = '/verify-number';
   static const name = '/name';
-  static const nameFilled = '/name-filled';
   static const dateOfBirth = '/date-of-birth';
   static const home = '/home';
   static const product = '/product';
@@ -22,8 +22,8 @@ abstract final class AppRoutes {
 }
 
 abstract final class AppRouter {
-  static final GoRouter router = GoRouter(
-    initialLocation: AppRoutes.onboarding,
+  static GoRouter createRouter({required bool isLoggedIn}) => GoRouter(
+    initialLocation: isLoggedIn ? AppRoutes.home : AppRoutes.onboarding,
     routes: [
       GoRoute(
         path: AppRoutes.onboarding,
@@ -33,7 +33,11 @@ abstract final class AppRouter {
       GoRoute(
         path: AppRoutes.phoneNumber,
         name: 'phone-number',
-        builder: (context, state) => const PhoneNumberScreen(),
+        builder: (context, state) => PhoneNumberScreen(
+          mode: state.extra is AuthMode
+              ? state.extra! as AuthMode
+              : AuthMode.register,
+        ),
       ),
       GoRoute(
         path: AppRoutes.verifyNumber,
@@ -44,11 +48,6 @@ abstract final class AppRouter {
         path: AppRoutes.name,
         name: 'name',
         builder: (context, state) => const NameScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.nameFilled,
-        name: 'name-filled',
-        builder: (context, state) => const NameScreen(filled: true),
       ),
       GoRoute(
         path: AppRoutes.dateOfBirth,

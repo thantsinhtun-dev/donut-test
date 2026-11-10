@@ -6,25 +6,37 @@ class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     required this.label,
     required this.onPressed,
+    this.isLoading = false,
     this.height = 52,
     super.key,
   });
 
   final String label;
   final VoidCallback? onPressed;
+  final bool isLoading;
   final double height;
 
   @override
   Widget build(BuildContext context) => SizedBox(
     width: double.infinity,
     height: height,
-    child: FilledButton(
-      onPressed: onPressed,
-      style: FilledButton.styleFrom(
-        backgroundColor: context.colorScheme.primary,
-        foregroundColor: context.colorScheme.onPrimary,
+    child: AbsorbPointer(
+      absorbing: onPressed == null,
+      child: FilledButton(
+        onPressed: isLoading ? null : onPressed,
+        style: FilledButton.styleFrom(
+          backgroundColor: onPressed == null
+              ? context.colorScheme.surfaceContainerHighest
+              : context.colorScheme.primary,
+          foregroundColor: onPressed == null ? context.colorScheme.onSurfaceVariant : context.colorScheme.onPrimary,
+        ),
+        child: isLoading
+            ? SizedBox.square(
+                dimension: 22,
+                child: CircularProgressIndicator(strokeWidth: 2, color: context.colorScheme.onPrimary),
+              )
+            : Text(label),
       ),
-      child: Text(label),
     ),
   );
 }

@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../shared/widgets/placeholder_action.dart';
+
 class SocialLoginButtons extends StatelessWidget {
   const SocialLoginButtons({super.key});
 
@@ -29,19 +31,15 @@ class _SocialButton extends StatelessWidget {
   final String assetPath;
 
   @override
-  Widget build(BuildContext context) => IgnorePointer(
-    child: IconButton(
-      tooltip: label,
-      onPressed: _noop,
-      visualDensity: VisualDensity.compact,
-      icon: Image.asset(
-        assetPath,
-        width: 24,
-        height: 24,
-        semanticLabel: '$label logo',
-      ),
+  Widget build(BuildContext context) => IconButton(
+    tooltip: label,
+    onPressed: () => showPlaceholderAction(context, '$label sign-in'),
+    visualDensity: VisualDensity.compact,
+    icon: Image.asset(
+      assetPath,
+      width: 24,
+      height: 24,
+      semanticLabel: '$label logo',
     ),
   );
 }
-
-void _noop() {}

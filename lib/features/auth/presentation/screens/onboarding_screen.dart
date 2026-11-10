@@ -3,9 +3,12 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../../core/extensions/app_context_extension.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/app_dimension.dart';
 import '../../../../shared/widgets/gradient_safe_area.dart';
 import '../../../../shared/widgets/legal_footer.dart';
 import '../../../../shared/widgets/primary_button.dart';
+import '../widgets/onboarding_hero_image.dart';
+import '../widgets/onboarding_login_prompt.dart';
 import '../widgets/social_login_buttons.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -20,26 +23,9 @@ class OnboardingScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(
-              height: (context.dimension.height * .52).clamp(300, 460),
-              width: double.infinity,
-              child: ShaderMask(
-                blendMode: BlendMode.dstIn,
-                shaderCallback: (bounds) => const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.black, Colors.black, Colors.transparent],
-                  stops: [0, .72, 1],
-                ).createShader(bounds),
-                child: Image.asset(
-                  'assets/images/onboarding_hero.png',
-                  fit: BoxFit.cover,
-                  semanticLabel: 'Pink frosted donut with colorful sprinkles',
-                ),
-              ),
-            ),
+            const OnboardingHeroImage(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 4, 24, 0),
+              padding: .fromLTRB(m6, m1, m6, 0),
               child: Column(
                 children: [
                   Center(
@@ -53,44 +39,23 @@ class OnboardingScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: m5),
                   PrimaryButton(
                     label: "LET'S GET STARTED",
                     onPressed: () => context.push(AppRoutes.phoneNumber),
                   ),
+                  const SizedBox(height: m3),
+                  const OnboardingLoginPrompt(),
                 ],
               ),
             ),
             const Spacer(),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+              padding: const EdgeInsets.fromLTRB(m6, 0, m6, m4),
               child: Column(
                 children: [
-                  Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Text(
-                        'Already have an account?',
-                        style: context.bodySmall,
-                      ),
-                      const IgnorePointer(
-                        child: TextButton(
-                          onPressed: _noop,
-                          style: ButtonStyle(
-                            minimumSize: WidgetStatePropertyAll(Size.zero),
-                            padding: WidgetStatePropertyAll(
-                              EdgeInsets.only(left: 4),
-                            ),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text('Log In'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
                   const SocialLoginButtons(),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: m3),
                   const LegalFooter(),
                 ],
               ),
@@ -101,5 +66,3 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 }
-
-void _noop() {}

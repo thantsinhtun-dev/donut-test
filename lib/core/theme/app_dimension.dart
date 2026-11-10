@@ -15,3 +15,5 @@ const double m1 = 4;
 const double m2 = 8;
 const double m3 = 12;
 const double m4 = 16;
+const double m5 = 20;
+const double m6 = 24;

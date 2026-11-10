@@ -27,8 +27,8 @@ dependencies:
   pinput: ^7.0.0
   material_ui: ^1.10.0
   timelines_plus: ^2.0.1
-
-
+  toastification: ^3.2.2
+  flutter_bloc: ^9.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

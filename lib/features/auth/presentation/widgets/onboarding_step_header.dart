@@ -52,23 +52,23 @@ class _ProgressPainter extends CustomPainter {
     final center = rect.center;
     final radius = size.shortestSide / 2 - 3;
     final track = Paint()
-      ..color = const Color(0xFFE7E6E8)
+      ..color = const Color(0xFFB2D6FF)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 5;
-    final cyan = Paint()
-      ..color = AppTheme.primary
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 10
-      ..strokeCap = StrokeCap.round;
-    final pink = Paint()
+      ..strokeWidth = 8;
+    final progressPaint = Paint()
       ..color = AppTheme.accent
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 10
+      ..strokeWidth = 8
       ..strokeCap = StrokeCap.round;
 
     canvas.drawCircle(center, radius, track);
-    canvas.drawArc(rect.deflate(3), -mathPi / 2, 2 * mathPi * progress, false, cyan);
-    canvas.drawArc(rect.deflate(3), -mathPi / 2 + 2 * mathPi * progress, 2 * mathPi * (1 - progress), false, pink);
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -mathPi / 2,
+      2 * mathPi * progress,
+      false,
+      progressPaint,
+    );
   }
 
   static const mathPi = 3.1415926535897932;

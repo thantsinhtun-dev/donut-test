@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../rewards/presentation/screens/rewards_screen.dart';
 import 'home_screen.dart';
+import 'settings_screen.dart';
 
 class MainTabsScreen extends StatefulWidget {
   const MainTabsScreen({super.key});
@@ -21,7 +22,7 @@ class _MainTabsScreenState extends State<MainTabsScreen> {
       backgroundColor: const Color(0xFFF1F3F4),
       body: IndexedStack(
         index: _selectedIndex,
-        children: const [HomeScreen(), RewardsScreen()],
+        children: const [HomeScreen(), RewardsScreen(), SettingsScreen()],
       ),
       bottomNavigationBar: SafeArea(
         top: false,
@@ -54,6 +55,12 @@ class _MainTabsScreenState extends State<MainTabsScreen> {
                 icon: Icons.workspace_premium_outlined,
                 selected: _selectedIndex == 1,
                 onTap: () => setState(() => _selectedIndex = 1),
+              ),
+              _TabButton(
+                label: 'Settings',
+                icon: Icons.settings_outlined,
+                selected: _selectedIndex == 2,
+                onTap: () => setState(() => _selectedIndex = 2),
               ),
             ],
           ),
