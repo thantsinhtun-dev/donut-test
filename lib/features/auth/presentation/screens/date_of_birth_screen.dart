@@ -1,6 +1,8 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/app_context_extension.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/widgets/gradient_safe_area.dart';
 import '../widgets/onboarding_step_header.dart';
@@ -49,7 +51,9 @@ class DateOfBirthScreen extends StatelessWidget {
                         const AppTextFormField(initialValue: '1980'),
                       ],
                     ),
-                    AuthContinueFooter(onPressed: () {}),
+                    AuthContinueFooter(
+                      onPressed: () => context.go(AppRoutes.welcome),
+                    ),
                   ],
                 ),
               ),

@@ -12,10 +12,7 @@ class SocialLoginButtons extends StatelessWidget {
         assetPath: 'assets/images/google_logo.png',
       ),
       SizedBox(width: 22),
-      _SocialButton(
-        label: 'Apple',
-        assetPath: 'assets/images/apple_logo.png',
-      ),
+      _SocialButton(label: 'Apple', assetPath: 'assets/images/apple_logo.png'),
       SizedBox(width: 22),
       _SocialButton(
         label: 'Facebook',

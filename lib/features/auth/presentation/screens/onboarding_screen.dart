@@ -1,5 +1,5 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../../core/extensions/app_context_extension.dart';
 import '../../../../core/router/app_router.dart';
@@ -54,7 +54,10 @@ class OnboardingScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  PrimaryButton(label: "LET'S GET STARTED", onPressed: () => context.push(AppRoutes.phoneNumber)),
+                  PrimaryButton(
+                    label: "LET'S GET STARTED",
+                    onPressed: () => context.push(AppRoutes.phoneNumber),
+                  ),
                 ],
               ),
             ),
@@ -66,13 +69,18 @@ class OnboardingScreen extends StatelessWidget {
                   Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Text('Already have an account?', style: context.bodySmall),
+                      Text(
+                        'Already have an account?',
+                        style: context.bodySmall,
+                      ),
                       const IgnorePointer(
                         child: TextButton(
                           onPressed: _noop,
                           style: ButtonStyle(
                             minimumSize: WidgetStatePropertyAll(Size.zero),
-                            padding: WidgetStatePropertyAll(EdgeInsets.only(left: 4)),
+                            padding: WidgetStatePropertyAll(
+                              EdgeInsets.only(left: 4),
+                            ),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
                           child: Text('Log In'),
