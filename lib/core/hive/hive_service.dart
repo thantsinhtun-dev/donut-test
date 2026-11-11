@@ -26,11 +26,23 @@ class HiveService {
     final hiveCipher = await generateHiveCipherIfNeeded(secureStorage);
 
     /// Register Hive Box
-    await Hive.openBox<String>(HiveConstant.authSessionBox, encryptionCipher: hiveCipher);
-    await Hive.openBox<AuthUser>(HiveConstant.authBox, encryptionCipher: hiveCipher);
+    await Hive.openBox<String>(
+      HiveConstant.authSessionBox,
+      encryptionCipher: hiveCipher,
+    );
+    await Hive.openBox<AuthUser>(
+      HiveConstant.authBox,
+      encryptionCipher: hiveCipher,
+    );
+    await Hive.openBox<String>(
+      HiveConstant.homeContentBox,
+      encryptionCipher: hiveCipher,
+    );
   }
 
-  static Future<HiveCipher> generateHiveCipherIfNeeded(FlutterSecureStorage secureStorage) async {
+  static Future<HiveCipher> generateHiveCipherIfNeeded(
+    FlutterSecureStorage secureStorage,
+  ) async {
     String? encryptionKeyString = await secureStorage.read(key: 'key');
     if (encryptionKeyString == null) {
       encryptionKeyString = base64UrlEncode(Hive.generateSecureKey());

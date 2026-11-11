@@ -1,9 +1,18 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../domain/entities/home_content.dart';
+import 'home_data_image.dart';
 
 class NearbyStoresSection extends StatelessWidget {
-  const NearbyStoresSection({super.key});
+  const NearbyStoresSection({
+    required this.section,
+    required this.shops,
+    super.key,
+  });
+
+  final HomeSection section;
+  final List<HomeShop> shops;
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +28,8 @@ class NearbyStoresSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'There are 4 J’Donut shops\nnear you. 🥰',
+          Text(
+            section.title,
             style: TextStyle(
               color: Colors.white,
               fontSize: 17,
@@ -50,10 +59,11 @@ class NearbyStoresSection extends StatelessWidget {
             child: ListView(
               scrollDirection: Axis.horizontal,
               clipBehavior: Clip.none,
-              children: const [
-                _StoreCard(),
-                SizedBox(width: 10),
-                _StoreCard(isSecond: true),
+              children: [
+                for (var index = 0; index < shops.length; index++) ...[
+                  if (index > 0) const SizedBox(width: 10),
+                  _StoreCard(shop: shops[index]),
+                ],
               ],
             ),
           ),
@@ -64,9 +74,9 @@ class NearbyStoresSection extends StatelessWidget {
 }
 
 class _StoreCard extends StatelessWidget {
-  const _StoreCard({this.isSecond = false});
+  const _StoreCard({required this.shop});
 
-  final bool isSecond;
+  final HomeShop shop;
 
   @override
   Widget build(BuildContext context) {
@@ -83,17 +93,17 @@ class _StoreCard extends StatelessWidget {
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(9),
-              child: Image.asset(
-                'assets/images/storefront_promo.png',
+              child: HomeDataImage(
+                imageUrl: shop.imageUrl,
+                fallbackAsset: shop.fallbackAsset,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                alignment: isSecond ? Alignment.topRight : Alignment.topLeft,
               ),
             ),
           ),
           const SizedBox(height: 5),
           Text(
-            isSecond ? 'J’Donut Town Center' : 'Myaynigone J’Donut',
+            shop.name,
             style: const TextStyle(
               color: AppTheme.ink,
               fontSize: 9,
@@ -101,16 +111,14 @@ class _StoreCard extends StatelessWidget {
             ),
           ),
           Text(
-            isSecond
-                ? 'Township, Yangon.'
-                : '2972 Pyay Road, Sanchaung Township, Yangon.',
+            shop.address,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(color: Color(0xFF7F858D), fontSize: 8),
           ),
-          const Text(
-            'Order Online',
-            style: TextStyle(
+          Text(
+            shop.actionLabel,
+            style: const TextStyle(
               color: AppTheme.accent,
               fontSize: 8,
               fontWeight: FontWeight.w600,

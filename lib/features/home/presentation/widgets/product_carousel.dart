@@ -4,11 +4,13 @@ import 'package:material_ui/material_ui.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'orange_badge.dart';
+import '../../domain/entities/home_content.dart';
+import 'home_data_image.dart';
 
 class ProductCarousel extends StatelessWidget {
-  const ProductCarousel({required this.popular, super.key});
+  const ProductCarousel({required this.products, super.key});
 
-  final bool popular;
+  final List<HomeProduct> products;
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -17,46 +19,23 @@ class ProductCarousel extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       clipBehavior: Clip.none,
       children: [
-        _ProductCard(
-          name: popular
-              ? 'Strawberry\nChocolate Donuts'
-              : "Santa’s favorite\ncookies set",
-          price: popular ? '3,200 MMK' : '20% off',
-          alignment: Alignment.center,
-          onTap: () => context.push(AppRoutes.product),
-        ),
-        const SizedBox(width: 10),
-        _ProductCard(
-          name: popular
-              ? 'Dalgona Creamy\nCoffee'
-              : "Santa’s favorite\ncookies set",
-          price: popular ? '2,500 MMK' : '20% off',
-          alignment: Alignment.topLeft,
-          onTap: () => context.push(AppRoutes.product),
-        ),
-        const SizedBox(width: 10),
-        _ProductCard(
-          name: popular ? 'Sprinkle Donut' : 'Holiday donut box',
-          price: popular ? '1,800 MMK' : '15% off',
-          alignment: Alignment.bottomRight,
-          onTap: () => context.push(AppRoutes.product),
-        ),
+        for (var index = 0; index < products.length; index++) ...[
+          if (index > 0) const SizedBox(width: 10),
+          _ProductCard(
+            product: products[index],
+            onTap: () =>
+                context.push(AppRoutes.product, extra: products[index]),
+          ),
+        ],
       ],
     ),
   );
 }
 
 class _ProductCard extends StatelessWidget {
-  const _ProductCard({
-    required this.name,
-    required this.price,
-    required this.alignment,
-    required this.onTap,
-  });
+  const _ProductCard({required this.product, required this.onTap});
 
-  final String name;
-  final String price;
-  final Alignment alignment;
+  final HomeProduct product;
   final VoidCallback onTap;
 
   @override
@@ -76,16 +55,19 @@ class _ProductCard extends StatelessWidget {
                   fit: StackFit.expand,
                   children: [
                     Container(color: Colors.white),
-                    Image.asset(
-                      'assets/images/onboarding_donut.png',
-                      fit: BoxFit.cover,
-                      alignment: alignment,
+                    HomeDataImage(
+                      imageUrl: product.imageUrl,
+                      fallbackAsset: product.fallbackAsset,
                     ),
-                    if (price.contains('%'))
+                    if (product.discountPercent != null || product.isNew)
                       Positioned(
                         right: 6,
                         bottom: 6,
-                        child: OrangeBadge(text: price),
+                        child: OrangeBadge(
+                          text: product.discountPercent != null
+                              ? '${product.discountPercent}% off'
+                              : 'New',
+                        ),
                       ),
                   ],
                 ),
@@ -93,7 +75,7 @@ class _ProductCard extends StatelessWidget {
             ),
             const SizedBox(height: 7),
             Text(
-              name,
+              product.name,
               style: const TextStyle(
                 color: AppTheme.ink,
                 fontSize: 9,
@@ -101,14 +83,22 @@ class _ProductCard extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            if (!price.contains('%'))
-              Text(
-                price,
-                style: const TextStyle(color: Color(0xFF777D85), fontSize: 8),
-              ),
+            Text(
+              '${_formatPrice(product.priceMmk)} MMK',
+              style: const TextStyle(color: Color(0xFF777D85), fontSize: 8),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+String _formatPrice(int price) {
+  final digits = price.toString();
+  final formatted = digits.replaceAllMapped(
+    RegExp(r'\B(?=(\d{3})+(?!\d))'),
+    (_) => ',',
+  );
+  return formatted;
 }

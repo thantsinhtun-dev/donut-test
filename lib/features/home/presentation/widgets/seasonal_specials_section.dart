@@ -1,9 +1,18 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../domain/entities/home_content.dart';
+
 import 'seasonal_specials_list.dart';
 
 class SeasonalSpecialsSection extends StatelessWidget {
-  const SeasonalSpecialsSection({super.key});
+  const SeasonalSpecialsSection({
+    required this.section,
+    required this.products,
+    super.key,
+  });
+
+  final HomeSection section;
+  final List<HomeProduct> products;
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +23,9 @@ class SeasonalSpecialsSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Seasonal specials',
+                  section.title,
                   style: TextStyle(
                     color: Color(0xFF292F38),
                     fontSize: 15,
@@ -40,7 +49,7 @@ class SeasonalSpecialsSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          const SeasonalSpecialsList(),
+          SeasonalSpecialsList(products: products),
         ],
       ),
     );

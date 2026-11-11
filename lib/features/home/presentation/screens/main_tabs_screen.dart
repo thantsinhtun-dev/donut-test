@@ -22,7 +22,11 @@ class _MainTabsScreenState extends State<MainTabsScreen> {
       backgroundColor: const Color(0xFFF1F3F4),
       body: IndexedStack(
         index: _selectedIndex,
-        children: const [HomeScreen(), RewardsScreen(), SettingsScreen()],
+        children: [
+          const HomeScreen(),
+          RewardsScreen(isActive: _selectedIndex == 1),
+          const SettingsScreen(),
+        ],
       ),
       bottomNavigationBar: SafeArea(
         top: false,

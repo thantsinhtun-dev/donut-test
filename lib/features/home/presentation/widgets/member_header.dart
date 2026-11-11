@@ -1,9 +1,13 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../domain/entities/home_content.dart';
+import 'home_data_image.dart';
 
 class MemberHeader extends StatelessWidget {
-  const MemberHeader({super.key});
+  const MemberHeader({required this.member, super.key});
+
+  final MemberProfile member;
 
   @override
   Widget build(BuildContext context) {
@@ -12,18 +16,25 @@ class MemberHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 25,
-              backgroundImage: AssetImage('assets/images/member_avatar.png'),
+              child: ClipOval(
+                child: HomeDataImage(
+                  imageUrl: member.avatarUrl,
+                  fallbackAsset: member.fallbackAsset,
+                  width: 50,
+                  height: 50,
+                ),
+              ),
             ),
             const SizedBox(width: 10),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hania',
-                    style: TextStyle(
+                    member.name,
+                    style: const TextStyle(
                       color: AppTheme.ink,
                       fontSize: 22,
                       height: 1.1,
@@ -31,8 +42,11 @@ class MemberHeader extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Bronze member',
-                    style: TextStyle(color: Color(0xFF7F858D), fontSize: 10),
+                    member.tier,
+                    style: const TextStyle(
+                      color: Color(0xFF7F858D),
+                      fontSize: 10,
+                    ),
                   ),
                 ],
               ),
@@ -44,22 +58,27 @@ class MemberHeader extends StatelessWidget {
                 color: const Color(0xFFFF7D19),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.notifications_none, color: Colors.white, size: 17),
-                  SizedBox(width: 3),
-                  CircleAvatar(
-                    radius: 7,
-                    backgroundColor: Colors.white,
-                    child: Text(
-                      '2',
-                      style: TextStyle(
-                        color: Color(0xFFFF7D19),
-                        fontSize: 8,
-                        fontWeight: FontWeight.w700,
+                  const Icon(
+                    Icons.notifications_none,
+                    color: Colors.white,
+                    size: 17,
+                  ),
+                  const SizedBox(width: 3),
+                  if (member.notifications > 0)
+                    CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Colors.white,
+                      child: Text(
+                        '${member.notifications}',
+                        style: const TextStyle(
+                          color: Color(0xFFFF7D19),
+                          fontSize: 8,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -72,9 +91,9 @@ class MemberHeader extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: const Text(
-            '1290 points left to become Gold Member',
-            style: TextStyle(color: Color(0xFF747A82), fontSize: 8),
+          child: Text(
+            '${member.pointsToNextTier} points left to become ${member.nextTierName} Member',
+            style: const TextStyle(color: Color(0xFF747A82), fontSize: 8),
           ),
         ),
       ],

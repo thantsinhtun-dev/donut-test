@@ -52,3 +52,6 @@ app.*.map.json
 # Keep the Freezed API result union with its source.
 !lib/core/network/api_result.freezed.dart
 !lib/features/auth/presentation/cubit/auth_state.freezed.dart
+!lib/features/home/domain/entities/home_content.freezed.dart
+!lib/features/home/domain/entities/home_content.g.dart
+!lib/features/home/presentation/cubit/home_state.freezed.dart

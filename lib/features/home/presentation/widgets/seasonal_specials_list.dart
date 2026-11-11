@@ -1,10 +1,15 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../domain/entities/home_content.dart';
+
 import '../../../../core/theme/app_theme.dart';
 import 'orange_badge.dart';
+import 'home_data_image.dart';
 
 class SeasonalSpecialsList extends StatelessWidget {
-  const SeasonalSpecialsList({super.key});
+  const SeasonalSpecialsList({required this.products, super.key});
+
+  final List<HomeProduct> products;
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -12,39 +17,20 @@ class SeasonalSpecialsList extends StatelessWidget {
     child: ListView(
       scrollDirection: Axis.horizontal,
       clipBehavior: Clip.none,
-      children: const [
-        _SeasonalCard(
-          title: 'Mistletoe\nRomance box',
-          badge: '50% off',
-          alignment: Alignment.center,
-        ),
-        SizedBox(width: 10),
-        _SeasonalCard(
-          title: 'Christmas Mini\nFamily box',
-          badge: '',
-          alignment: Alignment.topLeft,
-        ),
-        SizedBox(width: 10),
-        _SeasonalCard(
-          title: 'Sweet Treats\nDonut box',
-          badge: 'New',
-          alignment: Alignment.bottomRight,
-        ),
+      children: [
+        for (var index = 0; index < products.length; index++) ...[
+          if (index > 0) const SizedBox(width: 10),
+          _SeasonalCard(product: products[index]),
+        ],
       ],
     ),
   );
 }
 
 class _SeasonalCard extends StatelessWidget {
-  const _SeasonalCard({
-    required this.title,
-    required this.badge,
-    required this.alignment,
-  });
+  const _SeasonalCard({required this.product});
 
-  final String title;
-  final String badge;
-  final Alignment alignment;
+  final HomeProduct product;
 
   @override
   Widget build(BuildContext context) {
@@ -59,16 +45,19 @@ class _SeasonalCard extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.asset(
-                    'assets/images/onboarding_donut.png',
-                    fit: BoxFit.cover,
-                    alignment: alignment,
+                  HomeDataImage(
+                    imageUrl: product.imageUrl,
+                    fallbackAsset: product.fallbackAsset,
                   ),
-                  if (badge.isNotEmpty)
+                  if (product.discountPercent != null || product.isNew)
                     Positioned(
                       right: 7,
                       bottom: 7,
-                      child: OrangeBadge(text: badge),
+                      child: OrangeBadge(
+                        text: product.discountPercent != null
+                            ? '${product.discountPercent}% off'
+                            : 'New',
+                      ),
                     ),
                 ],
               ),
@@ -76,7 +65,7 @@ class _SeasonalCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            title,
+            product.name,
             style: const TextStyle(
               color: AppTheme.ink,
               fontSize: 10,

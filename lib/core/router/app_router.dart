@@ -9,6 +9,7 @@ import '../../features/auth/presentation/screens/date_of_birth_screen.dart';
 import '../../features/auth/presentation/screens/welcome_screen.dart';
 import '../../features/home/presentation/screens/main_tabs_screen.dart';
 import '../../features/product/presentation/screens/product_screen.dart';
+import '../../features/home/domain/entities/home_content.dart';
 
 abstract final class AppRoutes {
   static const onboarding = '/onboarding';
@@ -67,7 +68,11 @@ abstract final class AppRouter {
       GoRoute(
         path: AppRoutes.product,
         name: 'product',
-        builder: (context, state) => const ProductScreen(),
+        builder: (context, state) => ProductScreen(
+          product: state.extra is HomeProduct
+              ? state.extra! as HomeProduct
+              : null,
+        ),
       ),
     ],
   );

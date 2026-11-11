@@ -1,10 +1,19 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../domain/entities/home_content.dart';
+
 import 'member_header.dart';
 import 'promotion_carousel.dart';
 
 class HomeTopSection extends StatelessWidget {
-  const HomeTopSection({super.key});
+  const HomeTopSection({
+    required this.member,
+    required this.banners,
+    super.key,
+  });
+
+  final MemberProfile member;
+  final List<HomeBanner> banners;
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +45,12 @@ class HomeTopSection extends StatelessWidget {
               ),
             ),
           ),
-          const Column(
+          Column(
             children: [
-              MemberHeader(),
-              SizedBox(height: 14),
-              PromotionCarousel(),
-              SizedBox(height: 14),
+              MemberHeader(member: member),
+              const SizedBox(height: 14),
+              PromotionCarousel(banners: banners),
+              const SizedBox(height: 14),
             ],
           ),
         ],

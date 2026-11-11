@@ -25,10 +25,13 @@ class VerifyNumberScreen extends StatefulWidget {
   State<VerifyNumberScreen> createState() => _VerifyNumberScreenState();
 }
 
-class _VerifyNumberScreenState extends State<VerifyNumberScreen> with SingleTickerProviderStateMixin {
+class _VerifyNumberScreenState extends State<VerifyNumberScreen>
+    with SingleTickerProviderStateMixin {
   final _pinController = TextEditingController();
   final ValueNotifier<int> _uiRevision = ValueNotifier(0);
-  final ValueNotifier<int> _resendSecondsRemaining = ValueNotifier(otpResendCooldown.inSeconds);
+  final ValueNotifier<int> _resendSecondsRemaining = ValueNotifier(
+    otpResendCooldown.inSeconds,
+  );
   final ValueNotifier<String?> _errorText = ValueNotifier(null);
   final ValueNotifier<bool> _numberNotRegistered = ValueNotifier(false);
   late final AnimationController _shakeController;
@@ -44,7 +47,10 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> with SingleTick
   @override
   void initState() {
     super.initState();
-    _shakeController = AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
+    _shakeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+    );
     _shakeAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 0, end: -10), weight: 1),
       TweenSequenceItem(tween: Tween(begin: -10, end: 10), weight: 2),
@@ -131,18 +137,23 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> with SingleTick
     final focusedPinTheme = OtpPinInput.createFocusedTheme(pinTheme);
 
     return BlocListener<AuthCubit, AuthState>(
-      listenWhen: (previous, current) => previous.pageState != current.pageState,
+      listenWhen: (previous, current) =>
+          previous.pageState != current.pageState,
       listener: (context, state) {
-        if (state.pageState == PageState.fail && state.errorMessage == AuthPageMessages.invalidOtp) {
+        if (state.pageState == PageState.fail &&
+            state.errorMessage == AuthPageMessages.invalidOtp) {
           unawaited(_handleInvalidOtp());
-        } else if (state.pageState == PageState.success && state.successMessage == AuthPageMessages.numberVerified) {
+        } else if (state.pageState == PageState.success &&
+            state.successMessage == AuthPageMessages.numberVerified) {
           _resendTimer?.cancel();
           context.push(AppRoutes.name);
-        } else if (state.pageState == PageState.fail && state.errorMessage == AuthPageMessages.unregisteredPhone) {
+        } else if (state.pageState == PageState.fail &&
+            state.errorMessage == AuthPageMessages.unregisteredPhone) {
           _errorText.value = null;
           _numberNotRegistered.value = true;
           _refreshUi();
-        } else if (state.pageState == PageState.success && state.successMessage == AuthPageMessages.loggedIn) {
+        } else if (state.pageState == PageState.success &&
+            state.successMessage == AuthPageMessages.loggedIn) {
           _resendTimer?.cancel();
           context.go(AppRoutes.home);
         } else if (state.pageState == PageState.fail) {
@@ -182,18 +193,20 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> with SingleTick
                             style: context.bodySmall.copyWith(fontSize: 11),
                           ),
                           const SizedBox(height: 22),
-                          OtpPinInput(
-                            controller: _pinController,
-                            uiRevision: _uiRevision,
-                            shakeAnimation: _shakeAnimation,
-                            enabled: !_isLocked && !isBusy && !_isShaking,
-                            defaultPinTheme: pinTheme,
-                            focusedPinTheme: focusedPinTheme,
-                            onChanged: (_) {
-                              _errorText.value = null;
-                              _numberNotRegistered.value = false;
-                              _refreshUi();
-                            },
+                          ListenableBuilder(
+                            listenable: _uiRevision,
+                            builder: (context, _) => OtpPinInput(
+                              controller: _pinController,
+                              shakeAnimation: _shakeAnimation,
+                              enabled: !_isLocked && !isBusy && !_isShaking,
+                              defaultPinTheme: pinTheme,
+                              focusedPinTheme: focusedPinTheme,
+                              onChanged: (_) {
+                                _errorText.value = null;
+                                _numberNotRegistered.value = false;
+                                _refreshUi();
+                              },
+                            ),
                           ),
                           const SizedBox(height: 16),
                           OtpErrorMessage(errorText: _errorText),
@@ -204,14 +217,24 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> with SingleTick
                             isResending: auth.isResending,
                             onResend: _resendCode,
                           ),
-                          OtpUnregisteredPrompt(visible: _numberNotRegistered, onRegister: _startRegistration),
+                          OtpUnregisteredPrompt(
+                            visible: _numberNotRegistered,
+                            onRegister: _startRegistration,
+                          ),
                         ],
                       ),
                       ListenableBuilder(
-                        listenable: Listenable.merge([_uiRevision, _pinController]),
+                        listenable: Listenable.merge([
+                          _uiRevision,
+                          _pinController,
+                        ]),
                         builder: (context, _) => AuthContinueFooter(
                           isLoading: isBusy,
-                          onPressed: !_isLocked && !_isShaking && !isBusy && _pinController.text.length == 6
+                          onPressed:
+                              !_isLocked &&
+                                  !_isShaking &&
+                                  !isBusy &&
+                                  _pinController.text.length == 6
                               ? _continue
                               : null,
                         ),

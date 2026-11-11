@@ -1,11 +1,18 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../domain/entities/home_content.dart';
+
 import 'product_carousel.dart';
 
 class HomeProductSection extends StatelessWidget {
-  const HomeProductSection({required this.popular, super.key});
+  const HomeProductSection({
+    required this.section,
+    required this.products,
+    super.key,
+  });
 
-  final bool popular;
+  final HomeSection section;
+  final List<HomeProduct> products;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +25,7 @@ class HomeProductSection extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  popular ? 'Popular 🔥' : 'Order again',
+                  section.title,
                   style: const TextStyle(
                     color: Color(0xFF292F38),
                     fontSize: 15,
@@ -42,7 +49,7 @@ class HomeProductSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ProductCarousel(popular: popular),
+          ProductCarousel(products: products),
         ],
       ),
     );

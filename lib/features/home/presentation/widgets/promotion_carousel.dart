@@ -1,12 +1,12 @@
 import 'package:material_ui/material_ui.dart';
 
-class PromotionCarousel extends StatelessWidget {
-  const PromotionCarousel({super.key});
+import '../../domain/entities/home_content.dart';
+import 'home_data_image.dart';
 
-  static const _promotionImages = [
-    'assets/images/promotion_central_boulevard.png',
-    'assets/images/promotion_hot_deals.png',
-  ];
+class PromotionCarousel extends StatelessWidget {
+  const PromotionCarousel({required this.banners, super.key});
+
+  final List<HomeBanner> banners;
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +17,13 @@ class PromotionCarousel extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         clipBehavior: Clip.none,
-        itemCount: _promotionImages.length,
+        itemCount: banners.length,
         separatorBuilder: (context, index) => const SizedBox(width: 10),
         itemBuilder: (context, index) => ClipRRect(
           borderRadius: BorderRadius.circular(15),
-          child: Image.asset(
-            _promotionImages[index],
+          child: HomeDataImage(
+            imageUrl: banners[index].imageUrl,
+            fallbackAsset: banners[index].fallbackAsset,
             width: cardWidth,
             height: 136,
             fit: BoxFit.cover,

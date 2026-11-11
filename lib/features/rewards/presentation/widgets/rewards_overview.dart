@@ -5,49 +5,83 @@ import 'package:timelines_plus/timelines_plus.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/number_format_utils.dart';
+import '../../../home/domain/entities/home_content.dart';
 
 class RewardsOverview extends StatelessWidget {
-  const RewardsOverview({super.key, this.points = 680000, this.targetPoints = 900000});
+  const RewardsOverview({super.key, required this.member, this.animate = true});
 
-  final int points;
-  final int targetPoints;
+  final MemberProfile member;
+  final bool animate;
 
   @override
   Widget build(BuildContext context) {
-    final progress = targetPoints <= 0 ? 0.0 : (points / targetPoints).clamp(0.0, 1.0).toDouble();
+    final progress = member.progressTargetPoints <= 0
+        ? 0.0
+        : (member.totalPoints / member.progressTargetPoints)
+              .clamp(0.0, 1.0)
+              .toDouble();
     return SizedBox(
       height: 250,
       child: Row(
         children: [
-          const Expanded(child: _TierList()),
+          Expanded(child: _TierList(member: member)),
           SizedBox(
             width: 240,
             height: 240,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  width: 240,
-                  height: 240,
-                  child: CustomPaint(painter: DonutProgressPainter(progress: progress)),
-                ),
-                Container(
-                  width: 136,
-                  height: 136,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Total points', style: TextStyle(color: AppTheme.accent, fontSize: 13)),
-                      SizedBox(height: 3),
-                      Text(
-                        formatPoints(points),
-                        style: TextStyle(color: AppTheme.accent, fontSize: 22, fontWeight: FontWeight.w700),
+            child: TweenAnimationBuilder<double>(
+              key: ValueKey(animate),
+              tween: Tween(begin: animate ? 0 : 1, end: 1),
+              duration: animate
+                  ? const Duration(milliseconds: 1600)
+                  : Duration.zero,
+              curve: Curves.easeOutCubic,
+              builder: (context, animatedProgress, _) {
+                final animatedPoints = (member.totalPoints * animatedProgress)
+                    .round();
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 240,
+                      height: 240,
+                      child: CustomPaint(
+                        painter: DonutProgressPainter(
+                          progress: progress * animatedProgress,
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ],
+                    ),
+                    Container(
+                      width: 136,
+                      height: 136,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Total points',
+                            style: TextStyle(
+                              color: AppTheme.accent,
+                              fontSize: 13,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            formatPoints(animatedPoints),
+                            style: const TextStyle(
+                              color: AppTheme.accent,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ],
@@ -81,7 +115,12 @@ class DonutProgressPainter extends CustomPainter {
 
     final progressPaint = Paint()
       ..shader = const SweepGradient(
-        colors: [Color(0xFFFF79B2), Color(0xFFFF4B98), Color(0xFFFF4E9A), Color(0xFFFF79B2)],
+        colors: [
+          Color(0xFFFF79B2),
+          Color(0xFFFF4B98),
+          Color(0xFFFF4E9A),
+          Color(0xFFFF79B2),
+        ],
         stops: [0, .32, .68, 1],
       ).createShader(arcRect)
       ..style = PaintingStyle.stroke
@@ -92,11 +131,14 @@ class DonutProgressPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant DonutProgressPainter oldDelegate) => oldDelegate.progress != progress;
+  bool shouldRepaint(covariant DonutProgressPainter oldDelegate) =>
+      oldDelegate.progress != progress;
 }
 
 class _TierList extends StatelessWidget {
-  const _TierList();
+  const _TierList({required this.member});
+
+  final MemberProfile member;
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +155,10 @@ class _TierList extends StatelessWidget {
                 height: 75,
                 child: TimelineNode(
                   direction: Axis.vertical,
-                  indicator: ContainerIndicator(size: 40, child: Image.asset('assets/images/rewards_tier_silver.png')),
+                  indicator: ContainerIndicator(
+                    size: 40,
+                    child: Image.asset(_tierAsset(member.tier)),
+                  ),
                   endConnector: SolidLineConnector(
                     direction: Axis.vertical,
                     thickness: 2,
@@ -126,7 +171,10 @@ class _TierList extends StatelessWidget {
                 height: 75,
                 child: TimelineNode(
                   direction: Axis.vertical,
-                  indicator: ContainerIndicator(size: 40, child: Image.asset('assets/images/rewards_tier_gold.png')),
+                  indicator: ContainerIndicator(
+                    size: 40,
+                    child: Image.asset(_tierAsset(member.nextTierName)),
+                  ),
                   startConnector: SolidLineConnector(
                     direction: Axis.vertical,
                     thickness: 2,
@@ -147,7 +195,7 @@ class _TierList extends StatelessWidget {
                   direction: Axis.vertical,
                   indicator: ContainerIndicator(
                     size: 40,
-                    child: Image.asset('assets/images/rewards_tier_platinum.png'),
+                    child: Image.asset(_tierAsset(member.followingTierName)),
                   ),
                   startConnector: SolidLineConnector(
                     direction: Axis.vertical,
@@ -162,27 +210,37 @@ class _TierList extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: const Column(
+          child: Column(
             children: [
               SizedBox(
                 height: 75,
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: _TierLabel(title: 'Silver', subtitle: 'You’re here now'),
+                  child: _TierLabel(
+                    title: member.tier,
+                    subtitle: 'You’re here now',
+                  ),
                 ),
               ),
               SizedBox(
                 height: 75,
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: _TierLabel(title: 'Gold', subtitle: '500 pts Remaining\nto become Gold'),
+                  child: _TierLabel(
+                    title: member.nextTierName,
+                    subtitle:
+                        '${formatPoints(member.pointsToNextTier)} pts Remaining\nto become ${member.nextTierName}',
+                  ),
                 ),
               ),
               SizedBox(
                 height: 75,
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: _TierLabel(title: 'Platinum', subtitle: 'You’ll be here soon'),
+                  child: _TierLabel(
+                    title: member.followingTierName,
+                    subtitle: 'You’ll be here soon',
+                  ),
                 ),
               ),
             ],
@@ -192,6 +250,14 @@ class _TierList extends StatelessWidget {
     );
   }
 }
+
+String _tierAsset(String tier) => switch (tier.toLowerCase()) {
+  'bronze' => 'assets/images/rewards_tier_bronze.png',
+  'silver' => 'assets/images/rewards_tier_silver.png',
+  'gold' => 'assets/images/rewards_tier_gold.png',
+  'platinum' => 'assets/images/rewards_tier_platinum.png',
+  _ => 'assets/images/member_badge.png',
+};
 
 class _TierLabel extends StatelessWidget {
   const _TierLabel({required this.title, required this.subtitle});
@@ -207,9 +273,20 @@ class _TierLabel extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(color: AppTheme.ink, fontSize: 10, fontWeight: FontWeight.w700),
+          style: const TextStyle(
+            color: AppTheme.ink,
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+          ),
         ),
-        Text(subtitle, style: const TextStyle(color: Color(0xFF727980), fontSize: 8, height: 1.25)),
+        Text(
+          subtitle,
+          style: const TextStyle(
+            color: Color(0xFF727980),
+            fontSize: 8,
+            height: 1.25,
+          ),
+        ),
       ],
     );
   }
